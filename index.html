@@ -1,15 +1,256 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Meu Site</title>
-  <link rel="stylesheet" href="style.css">
+    <title>Calculadora Simulado Glock G17</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background-color: black;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .background-img {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.25;
+            width: 80%;
+            max-width: 780px;
+            z-index: -2;
+        }
+
+        .menu {
+            background-color: #111;
+            padding: 15px;
+            border-bottom: 2px solid #555;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu button {
+            margin: 5px;
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            border: 1px solid #555;
+            cursor: pointer;
+        }
+
+        .menu button:hover { background: #222; }
+
+        .aba {
+            display: none;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ativa { display: block; }
+
+        input, select {
+            padding: 10px;
+            margin: 8px;
+            width: 250px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            text-transform: uppercase; /* força visualmente maiúsculas */
+        }
+
+        button { padding: 10px 20px; margin-top: 10px; cursor: pointer; background: #111; color: white; border: 1px solid #555; }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 90%;
+            max-width: 900px;
+            color: white;
+        }
+        table, th, td { border: 1px solid #555; }
+        th, td { padding: 10px; text-align: center; }
+
+        #resultado { margin-top: 20px; font-size: 24px; font-weight: bold; }
+
+        .aprovado { color: lime; }
+        .reprovado { color: red; }
+    </style>
 </head>
 
 <body>
 
-<h1>Meu site está online 🚀</h1>
+<img src="glock17.png" class="background-img">
 
-<script src="script.js"></script>
+<div class="menu">
+    <button onclick="mostrarAba('calculadora')">🎯 Calculadora</button>
+    <button onclick="mostrarAba('registro')">📋 Registro de Aluno</button>
+    <button onclick="mostrarAba('relatorio')">📑 Relatório</button>
+</div>
+
+<!-- ABA CALCULADORA -->
+<div id="calculadora" class="aba ativa">
+    <h2>CALCULADORA PROVA DE TIRO</h2>
+    <input type="number" id="valor1" placeholder="Alvo Silhueta (máx 100)" max="100"><br>
+    <input type="number" id="valor2" placeholder="Alvo Colorido (máx 120)" max="120"><br>
+    <input type="number" id="total" placeholder="TOTAL" readonly><br>
+    <button onclick="calcular()">DISPARAR CÁLCULO</button>
+    <div id="resultado"></div>
+</div>
+
+<!-- ABA REGISTRO -->
+<div id="registro" class="aba">
+    <h2>REGISTRO DE ALUNO</h2>
+    <input type="text" id="turma" placeholder="Turma"><br>
+    <input type="text" id="aluno" placeholder="Nome do Aluno"><br>
+    <input type="number" id="r_valor1" placeholder="Nota Alvo Silhueta"><br>
+    <input type="number" id="r_valor2" placeholder="Nota Alvo Colorido"><br>
+    <input type="number" id="r_total" placeholder="Somatório" readonly><br>
+    <input type="text" id="r_status" placeholder="Status" readonly><br>
+    <button id="btnSalvar" onclick="adicionarAluno()">Salvar Registro</button>
+</div>
+
+<!-- ABA RELATÓRIO -->
+<div id="relatorio" class="aba">
+    <h2>RELATÓRIO DE ALUNOS</h2>
+    <select id="filtroTurma" onchange="filtrarRelatorio()">
+        <option value="">Todas as Turmas</option>
+    </select>
+    <table id="tabelaRelatorio">
+        <thead>
+            <tr>
+                <th>Turma</th>
+                <th>Aluno</th>
+                <th>Silhueta</th>
+                <th>Colorido</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<audio id="somDisparo" src="disparo.mp3"></audio>
+<audio id="somNegado" src="negado.mp3"></audio>
+
+<script>
+let alunos = [];
+
+function mostrarAba(id) {
+    document.getElementById("calculadora").classList.remove("ativa");
+    document.getElementById("registro").classList.remove("ativa");
+    document.getElementById("relatorio").classList.remove("ativa");
+    document.getElementById(id).classList.add("ativa");
+}
+
+// CALCULADORA
+const valor1 = document.getElementById("valor1");
+const valor2 = document.getElementById("valor2");
+valor1.addEventListener("keydown", e => { if(e.key==="Enter") valor2.focus(); });
+valor2.addEventListener("keydown", e => { if(e.key==="Enter") calcular(); });
+
+function calcular() {
+    let v1 = parseFloat(valor1.value);
+    let v2 = parseFloat(valor2.value);
+    let totalCampo = document.getElementById("total");
+    let resultado = document.getElementById("resultado");
+
+    if(isNaN(v1)||isNaN(v2)||v1>100||v2>120){
+        resultado.innerHTML="VALORES INVÁLIDOS!"; totalCampo.value="";
+        return;
+    }
+    let soma=v1+v2; totalCampo.value=soma;
+    if(soma<132||v1<40||v2<48){
+        resultado.innerHTML="REPROVADO"; resultado.className="reprovado";
+        document.getElementById("somNegado").play();
+    } else {
+        resultado.innerHTML="APROVADO"; resultado.className="aprovado";
+        document.getElementById("somDisparo").play();
+    }
+}
+
+// REGISTRO
+const turma = document.getElementById("turma");
+const aluno = document.getElementById("aluno");
+const r_valor1 = document.getElementById("r_valor1");
+const r_valor2 = document.getElementById("r_valor2");
+const btnSalvar = document.getElementById("btnSalvar");
+
+// ENTER para passar entre campos
+turma.addEventListener("keydown", e => { 
+    turma.value = turma.value.toUpperCase();
+    if(e.key==="Enter") aluno.focus(); 
+});
+aluno.addEventListener("keydown", e => { 
+    aluno.value = aluno.value.toUpperCase();
+    if(e.key==="Enter") r_valor1.focus(); 
+});
+r_valor1.addEventListener("keydown", e => { if(e.key==="Enter") r_valor2.focus(); });
+r_valor2.addEventListener("keydown", e => { if(e.key==="Enter") btnSalvar.focus(); });
+
+btnSalvar.addEventListener("keydown", e => { if(e.key==="Enter") adicionarAluno(); });
+
+// Força maiúsculas enquanto digita
+turma.addEventListener("input", () => { turma.value = turma.value.toUpperCase(); });
+aluno.addEventListener("input", () => { aluno.value = aluno.value.toUpperCase(); });
+
+function adicionarAluno() {
+    let t = turma.value.trim();
+    let a = aluno.value.trim();
+    let v1 = parseFloat(r_valor1.value);
+    let v2 = parseFloat(r_valor2.value);
+    let total = document.getElementById("r_total");
+    let statusCampo = document.getElementById("r_status");
+
+    if(!t||!a||isNaN(v1)||isNaN(v2)){ alert("Preencha todos os campos corretamente."); return; }
+
+    let soma = v1+v2; total.value = soma;
+    let status = (soma<132||v1<40||v2<48)?"REPROVADO":"APROVADO";
+    statusCampo.value = status;
+    statusCampo.style.color = (status==="APROVADO")?"lime":"red";
+
+    alunos.push({turma:t, aluno:a, v1, v2, total:soma, status});
+
+    atualizarRelatorio();
+
+    // Limpa campos e volta para Turma
+    aluno.value=""; r_valor1.value=""; r_valor2.value=""; total.value=""; statusCampo.value="";
+    turma.focus();
+}
+
+// RELATÓRIO
+function atualizarRelatorio() {
+    let tabela = document.getElementById("tabelaRelatorio").getElementsByTagName('tbody')[0];
+    tabela.innerHTML="";
+    let filtro = document.getElementById("filtroTurma").value;
+
+    // Atualiza opções de turmas
+    let selectTurma = document.getElementById("filtroTurma");
+    let turmasExistentes = [...new Set(alunos.map(a=>a.turma))];
+    selectTurma.innerHTML = `<option value="">Todas as Turmas</option>`+turmasExistentes.map(t=>`<option value="${t}">${t}</option>`).join("");
+
+    alunos.forEach(a=>{
+        if(filtro&&a.turma!==filtro) return;
+        let linha = tabela.insertRow();
+        linha.insertCell(0).innerText=a.turma;
+        linha.insertCell(1).innerText=a.aluno;
+        linha.insertCell(2).innerText=a.v1;
+        linha.insertCell(3).innerText=a.v2;
+        linha.insertCell(4).innerText=a.total;
+        linha.insertCell(5).innerText=a.status;
+        linha.cells[5].style.color=(a.status==="APROVADO")?"lime":"red";
+    });
+}
+
+function filtrarRelatorio() { atualizarRelatorio(); }
+</script>
+
 </body>
 </html>
