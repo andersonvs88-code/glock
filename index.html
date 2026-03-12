@@ -1,87 +1,125 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculadora Simulado Glock G17</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<title>Calculadora Simulado Glock G17</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Orbitron', sans-serif;
-            background-color: black;
-            color: white;
-            text-align: center;
-            overflow-x: hidden;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
 
-        .background-img {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.25;
-            width: 80%;
-            max-width: 780px;
-            z-index: -2;
-        }
+<style>
 
-        .menu {
-            background-color: #111;
-            padding: 15px;
-            border-bottom: 2px solid #555;
-            position: relative;
-            z-index: 1;
-        }
+body{
+margin:0;
+padding:0;
+font-family:'Orbitron',sans-serif;
+background:black;
+color:white;
+text-align:center;
+overflow-x:hidden;
+transition:background 0.2s;
+}
 
-        .menu button {
-            margin: 5px;
-            padding: 10px 20px;
-            background: black;
-            color: white;
-            border: 1px solid #555;
-            cursor: pointer;
-        }
+.flashAprovado{animation:flashGreen 0.25s 3;}
+.flashReprovado{animation:flashRed 0.25s 3;}
 
-        .menu button:hover { background: #222; }
+@keyframes flashGreen{
+0%{background:black}
+50%{background:#003300}
+100%{background:black}
+}
 
-        .aba {
-            display: none;
-            padding: 30px;
-            position: relative;
-            z-index: 1;
-        }
+@keyframes flashRed{
+0%{background:black}
+50%{background:#330000}
+100%{background:black}
+}
 
-        .ativa { display: block; }
+.background-img{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+opacity:0.25;
+width:80%;
+max-width:780px;
+z-index:-2;
+}
 
-        input, select {
-            padding: 10px;
-            margin: 8px;
-            width: 250px;
-            text-align: center;
-            border-radius: 5px;
-            border: none;
-            text-transform: uppercase; /* força visualmente maiúsculas */
-        }
+.menu{
+background:#111;
+padding:15px;
+border-bottom:2px solid #555;
+}
 
-        button { padding: 10px 20px; margin-top: 10px; cursor: pointer; background: #111; color: white; border: 1px solid #555; }
+.menu button{
+margin:5px;
+padding:10px 20px;
+background:black;
+color:white;
+border:1px solid #555;
+cursor:pointer;
+}
 
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 90%;
-            max-width: 900px;
-            color: white;
-        }
-        table, th, td { border: 1px solid #555; }
-        th, td { padding: 10px; text-align: center; }
+.menu button:hover{background:#222;}
 
-        #resultado { margin-top: 20px; font-size: 24px; font-weight: bold; }
+.aba{
+display:none;
+padding:30px;
+}
 
-        .aprovado { color: lime; }
-        .reprovado { color: red; }
-    </style>
+.ativa{display:block;}
+
+input,select{
+padding:10px;
+margin:8px;
+width:260px;
+text-align:center;
+border-radius:5px;
+border:none;
+text-transform:uppercase;
+}
+
+button{
+padding:10px 20px;
+margin-top:10px;
+cursor:pointer;
+background:#111;
+color:white;
+border:1px solid #555;
+}
+
+table{
+margin:20px auto;
+border-collapse:collapse;
+width:90%;
+max-width:900px;
+text-transform:uppercase;
+}
+
+table,th,td{border:1px solid #555;}
+
+th,td{
+padding:10px;
+text-align:center;
+}
+
+#resultado{
+margin-top:20px;
+font-size:26px;
+font-weight:bold;
+}
+
+#msgRegistro{
+margin-top:10px;
+font-size:20px;
+font-weight:bold;
+color:lime;
+}
+
+.aprovado{color:lime;}
+.reprovado{color:red;}
+
+</style>
 </head>
 
 <body>
@@ -89,167 +127,284 @@
 <img src="glock17.png" class="background-img">
 
 <div class="menu">
-    <button onclick="mostrarAba('calculadora')">🎯 Calculadora</button>
-    <button onclick="mostrarAba('registro')">📋 Registro de Aluno</button>
-    <button onclick="mostrarAba('relatorio')">📑 Relatório</button>
+<button onclick="mostrarAba('calculadora')">🎯 Calculadora</button>
+<button onclick="mostrarAba('registro')">📋 Registro de Aluno</button>
+<button onclick="mostrarAba('relatorio')">📑 Relatório</button>
 </div>
 
-<!-- ABA CALCULADORA -->
+<!-- CALCULADORA -->
+
 <div id="calculadora" class="aba ativa">
-    <h2>CALCULADORA PROVA DE TIRO</h2>
-    <input type="number" id="valor1" placeholder="Alvo Silhueta (máx 100)" max="100"><br>
-    <input type="number" id="valor2" placeholder="Alvo Colorido (máx 120)" max="120"><br>
-    <input type="number" id="total" placeholder="TOTAL" readonly><br>
-    <button onclick="calcular()">DISPARAR CÁLCULO</button>
-    <div id="resultado"></div>
+
+<h2>CALCULADORA PROVA DE TIRO</h2>
+
+<input type="number" id="silhueta5" placeholder="ALVO SILHUETA 5 MTS (MÁX 50)" max="50"><br>
+<input type="number" id="silhueta7" placeholder="ALVO SILHUETA 7 MTS (MÁX 50)" max="50"><br>
+<input type="number" id="colorido" placeholder="ALVO COLORIDO (MÁX 120)" max="120"><br>
+
+<input type="number" id="total" placeholder="TOTAL" readonly><br>
+
+<button onclick="calcular()">DISPARAR CÁLCULO</button>
+
+<div id="resultado"></div>
+
 </div>
 
-<!-- ABA REGISTRO -->
+<!-- REGISTRO -->
+
 <div id="registro" class="aba">
-    <h2>REGISTRO DE ALUNO</h2>
-    <input type="text" id="turma" placeholder="Turma"><br>
-    <input type="text" id="aluno" placeholder="Nome do Aluno"><br>
-    <input type="number" id="r_valor1" placeholder="Nota Alvo Silhueta"><br>
-    <input type="number" id="r_valor2" placeholder="Nota Alvo Colorido"><br>
-    <input type="number" id="r_total" placeholder="Somatório" readonly><br>
-    <input type="text" id="r_status" placeholder="Status" readonly><br>
-    <button id="btnSalvar" onclick="adicionarAluno()">Salvar Registro</button>
+
+<h2>REGISTRO DE ALUNO</h2>
+
+<input type="text" id="turma" maxlength="1" placeholder="Turma (A-Z)"><br>
+<input type="text" id="aluno" placeholder="Nome do Aluno"><br>
+
+<input type="number" id="r_s5" max="50" placeholder="Silhueta 5 mts"><br>
+<input type="number" id="r_s7" max="50" placeholder="Silhueta 7 mts"><br>
+<input type="number" id="r_colorido" max="120" placeholder="Alvo Colorido"><br>
+
+<input type="number" id="r_total" placeholder="Somatório" readonly><br>
+<input type="text" id="r_status" placeholder="Status" readonly><br>
+
+<button onclick="adicionarAluno()">Salvar Registro</button>
+
+<div id="msgRegistro"></div>
+
 </div>
 
-<!-- ABA RELATÓRIO -->
+<!-- RELATÓRIO -->
+
 <div id="relatorio" class="aba">
-    <h2>RELATÓRIO DE ALUNOS</h2>
-    <select id="filtroTurma" onchange="filtrarRelatorio()">
-        <option value="">Todas as Turmas</option>
-    </select>
-    <table id="tabelaRelatorio">
-        <thead>
-            <tr>
-                <th>Turma</th>
-                <th>Aluno</th>
-                <th>Silhueta</th>
-                <th>Colorido</th>
-                <th>Total</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+
+<h2>RELATÓRIO DE ALUNOS</h2>
+
+<select id="filtroTurma" onchange="filtrarRelatorio()">
+<option value="">Todas as Turmas</option>
+</select>
+
+<table id="tabelaRelatorio">
+
+<thead>
+<tr>
+<th>Turma</th>
+<th>Aluno</th>
+<th>5 mts</th>
+<th>7 mts</th>
+<th>Colorido</th>
+<th>Total</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
 </div>
+
+<!-- SONS -->
 
 <audio id="somDisparo" src="disparo.mp3"></audio>
 <audio id="somNegado" src="negado.mp3"></audio>
 
 <script>
-let alunos = [];
 
-function mostrarAba(id) {
-    document.getElementById("calculadora").classList.remove("ativa");
-    document.getElementById("registro").classList.remove("ativa");
-    document.getElementById("relatorio").classList.remove("ativa");
-    document.getElementById(id).classList.add("ativa");
+let alunos=[]
+
+function mostrarAba(id){
+document.querySelectorAll(".aba").forEach(a=>a.classList.remove("ativa"))
+document.getElementById(id).classList.add("ativa")
 }
 
-// CALCULADORA
-const valor1 = document.getElementById("valor1");
-const valor2 = document.getElementById("valor2");
-valor1.addEventListener("keydown", e => { if(e.key==="Enter") valor2.focus(); });
-valor2.addEventListener("keydown", e => { if(e.key==="Enter") calcular(); });
-
-function calcular() {
-    let v1 = parseFloat(valor1.value);
-    let v2 = parseFloat(valor2.value);
-    let totalCampo = document.getElementById("total");
-    let resultado = document.getElementById("resultado");
-
-    if(isNaN(v1)||isNaN(v2)||v1>100||v2>120){
-        resultado.innerHTML="VALORES INVÁLIDOS!"; totalCampo.value="";
-        return;
-    }
-    let soma=v1+v2; totalCampo.value=soma;
-    if(soma<132||v1<40||v2<48){
-        resultado.innerHTML="REPROVADO"; resultado.className="reprovado";
-        document.getElementById("somNegado").play();
-    } else {
-        resultado.innerHTML="APROVADO"; resultado.className="aprovado";
-        document.getElementById("somDisparo").play();
-    }
+function flash(tipo){
+document.body.classList.remove("flashAprovado","flashReprovado")
+void document.body.offsetWidth
+document.body.classList.add(tipo)
 }
 
-// REGISTRO
-const turma = document.getElementById("turma");
-const aluno = document.getElementById("aluno");
-const r_valor1 = document.getElementById("r_valor1");
-const r_valor2 = document.getElementById("r_valor2");
-const btnSalvar = document.getElementById("btnSalvar");
+/* BLOQUEIO TURMA */
 
-// ENTER para passar entre campos
-turma.addEventListener("keydown", e => { 
-    turma.value = turma.value.toUpperCase();
-    if(e.key==="Enter") aluno.focus(); 
-});
-aluno.addEventListener("keydown", e => { 
-    aluno.value = aluno.value.toUpperCase();
-    if(e.key==="Enter") r_valor1.focus(); 
-});
-r_valor1.addEventListener("keydown", e => { if(e.key==="Enter") r_valor2.focus(); });
-r_valor2.addEventListener("keydown", e => { if(e.key==="Enter") btnSalvar.focus(); });
+const campoTurma=document.getElementById("turma")
 
-btnSalvar.addEventListener("keydown", e => { if(e.key==="Enter") adicionarAluno(); });
+campoTurma.addEventListener("input",function(){
+this.value=this.value.replace(/[^a-zA-Z]/g,'').toUpperCase()
+})
 
-// Força maiúsculas enquanto digita
-turma.addEventListener("input", () => { turma.value = turma.value.toUpperCase(); });
-aluno.addEventListener("input", () => { aluno.value = aluno.value.toUpperCase(); });
+/* ENTER CALCULADORA */
 
-function adicionarAluno() {
-    let t = turma.value.trim();
-    let a = aluno.value.trim();
-    let v1 = parseFloat(r_valor1.value);
-    let v2 = parseFloat(r_valor2.value);
-    let total = document.getElementById("r_total");
-    let statusCampo = document.getElementById("r_status");
+const s5=document.getElementById("silhueta5")
+const s7=document.getElementById("silhueta7")
+const col=document.getElementById("colorido")
 
-    if(!t||!a||isNaN(v1)||isNaN(v2)){ alert("Preencha todos os campos corretamente."); return; }
+s5.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();s7.focus()}
+})
 
-    let soma = v1+v2; total.value = soma;
-    let status = (soma<132||v1<40||v2<48)?"REPROVADO":"APROVADO";
-    statusCampo.value = status;
-    statusCampo.style.color = (status==="APROVADO")?"lime":"red";
+s7.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();col.focus()}
+})
 
-    alunos.push({turma:t, aluno:a, v1, v2, total:soma, status});
+col.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();calcular()}
+})
 
-    atualizarRelatorio();
+function calcular(){
 
-    // Limpa campos e volta para Turma
-    aluno.value=""; r_valor1.value=""; r_valor2.value=""; total.value=""; statusCampo.value="";
-    turma.focus();
+let v1=parseFloat(s5.value)
+let v2=parseFloat(s7.value)
+let v3=parseFloat(col.value)
+
+let totalCampo=document.getElementById("total")
+let resultado=document.getElementById("resultado")
+
+if(isNaN(v1)||isNaN(v2)||isNaN(v3)||v1>50||v2>50||v3>120){
+resultado.innerHTML="VALORES INVÁLIDOS"
+totalCampo.value=""
+return
 }
 
-// RELATÓRIO
-function atualizarRelatorio() {
-    let tabela = document.getElementById("tabelaRelatorio").getElementsByTagName('tbody')[0];
-    tabela.innerHTML="";
-    let filtro = document.getElementById("filtroTurma").value;
+let soma=v1+v2+v3
+totalCampo.value=soma
 
-    // Atualiza opções de turmas
-    let selectTurma = document.getElementById("filtroTurma");
-    let turmasExistentes = [...new Set(alunos.map(a=>a.turma))];
-    selectTurma.innerHTML = `<option value="">Todas as Turmas</option>`+turmasExistentes.map(t=>`<option value="${t}">${t}</option>`).join("");
+let status
 
-    alunos.forEach(a=>{
-        if(filtro&&a.turma!==filtro) return;
-        let linha = tabela.insertRow();
-        linha.insertCell(0).innerText=a.turma;
-        linha.insertCell(1).innerText=a.aluno;
-        linha.insertCell(2).innerText=a.v1;
-        linha.insertCell(3).innerText=a.v2;
-        linha.insertCell(4).innerText=a.total;
-        linha.insertCell(5).innerText=a.status;
-        linha.cells[5].style.color=(a.status==="APROVADO")?"lime":"red";
-    });
+if(v1<20||v2<20||v3<48){
+status="REPROVADO"
+}
+else if(soma>=132){
+status="APROVADO"
+}
+else{
+status="REPROVADO"
 }
 
-function filtrarRelatorio() { atualizarRelatorio(); }
+resultado.innerHTML=status
+resultado.className=(status==="APROVADO")?"aprovado":"reprovado"
+
+if(status==="APROVADO"){
+flash("flashAprovado")
+document.getElementById("somDisparo").play()
+}else{
+flash("flashReprovado")
+document.getElementById("somNegado").play()
+}
+
+}
+
+/* ENTER REGISTRO */
+
+const rTurma=document.getElementById("turma")
+const rAluno=document.getElementById("aluno")
+const rS5=document.getElementById("r_s5")
+const rS7=document.getElementById("r_s7")
+const rColorido=document.getElementById("r_colorido")
+
+rTurma.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();rAluno.focus()}
+})
+
+rAluno.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();rS5.focus()}
+})
+
+rS5.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();rS7.focus()}
+})
+
+rS7.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();rColorido.focus()}
+})
+
+rColorido.addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();adicionarAluno()}
+})
+
+function adicionarAluno(){
+
+let t=rTurma.value
+let a=rAluno.value.toUpperCase()
+
+let v1=parseFloat(rS5.value)
+let v2=parseFloat(rS7.value)
+let v3=parseFloat(rColorido.value)
+
+if(v1>50||v2>50||v3>120){
+alert("VALORES ACIMA DO LIMITE")
+return
+}
+
+let soma=v1+v2+v3
+
+let status
+
+if(v1<20||v2<20||v3<48){
+status="REPROVADO"
+}
+else if(soma>=132){
+status="APROVADO"
+}
+else{
+status="REPROVADO"
+}
+
+document.getElementById("r_total").value=soma
+document.getElementById("r_status").value=status
+
+alunos.push({turma:t,aluno:a,s5:v1,s7:v2,colorido:v3,total:soma,status})
+
+atualizarRelatorio()
+
+document.getElementById("msgRegistro").innerHTML="REGISTRO SALVO"
+
+setTimeout(()=>{document.getElementById("msgRegistro").innerHTML=""},2000)
+
+document.getElementById("registro").querySelectorAll("input").forEach(i=>i.value="")
+
+rTurma.focus()
+
+}
+
+function atualizarRelatorio(){
+
+let tabela=document.querySelector("#tabelaRelatorio tbody")
+tabela.innerHTML=""
+
+let filtro=document.getElementById("filtroTurma").value
+
+let turmas=[...new Set(alunos.map(a=>a.turma))]
+
+let select=document.getElementById("filtroTurma")
+
+let valorSelecionado=filtro
+
+select.innerHTML='<option value="">Todas as Turmas</option>'+turmas.map(t=>`<option value="${t}">${t}</option>`).join("")
+
+select.value=valorSelecionado
+
+alunos.forEach(a=>{
+
+if(filtro && a.turma!==filtro)return
+
+let linha=tabela.insertRow()
+
+linha.insertCell(0).innerText=a.turma
+linha.insertCell(1).innerText=a.aluno
+linha.insertCell(2).innerText=a.s5
+linha.insertCell(3).innerText=a.s7
+linha.insertCell(4).innerText=a.colorido
+linha.insertCell(5).innerText=a.total
+linha.insertCell(6).innerText=a.status
+
+linha.cells[6].style.color=(a.status==="APROVADO")?"lime":"red"
+
+})
+
+}
+
+function filtrarRelatorio(){
+atualizarRelatorio()
+}
+
 </script>
 
 </body>
