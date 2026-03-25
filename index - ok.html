@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora Simulado Glock G17</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+padding:0;
+font-family:'Orbitron',sans-serif;
+background:black;
+color:white;
+text-align:center;
+overflow-x:hidden;
+transition:background 0.2s;
+}
+
+.background-img{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+opacity:0.25;
+width:80%;
+max-width:800px;
+z-index:-2;
+}
+
+.flashAprovado{animation:flashGreen 0.25s 3;}
+.flashReprovado{animation:flashRed 0.25s 3;}
+.flashSegunda{animation:flashYellow 0.25s 3;}
+
+@keyframes flashGreen{
+0%{background:black}
+50%{background:#003300}
+100%{background:black}
+}
+
+@keyframes flashRed{
+0%{background:black}
+50%{background:#330000}
+100%{background:black}
+}
+
+@keyframes flashYellow{
+0%{background:black}
+50%{background:#333300}
+100%{background:black}
+}
+
+.menu{
+background:#111;
+padding:15px;
+border-bottom:2px solid #555;
+}
+
+.menu button{
+margin:5px;
+padding:10px 20px;
+background:black;
+color:white;
+border:1px solid #555;
+cursor:pointer;
+}
+
+.menu button:hover{background:#222;}
+
+.aba{
+display:none;
+padding:30px;
+}
+
+.ativa{display:block;}
+
+input,select{
+padding:10px;
+margin:8px;
+width:260px;
+text-align:center;
+border-radius:5px;
+border:none;
+text-transform:uppercase;
+}
+
+button{
+padding:10px 20px;
+margin-top:10px;
+cursor:pointer;
+background:#111;
+color:white;
+border:1px solid #555;
+}
+
+table{
+margin:20px auto;
+border-collapse:collapse;
+width:90%;
+max-width:900px;
+text-transform:uppercase;
+}
+
+table,th,td{border:1px solid #555;}
+
+th,td{
+padding:10px;
+text-align:center;
+}
+
+#resultado{
+margin-top:20px;
+font-size:26px;
+font-weight:bold;
+}
+
+.aprovado{color:lime;}
+.reprovado{color:red;}
+.segunda{color:yellow;}
+
+.credito{
+position:fixed;
+bottom:5px;
+right:10px;
+font-size:11px;
+color:#cccccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<img src="glock17.png" class="background-img">
+
+<div class="menu">
+<button onclick="mostrarAba('calculadora')">🎯 Calculadora</button>
+<button onclick="mostrarAba('registro')">📋 Registro de Aluno</button>
+<button onclick="mostrarAba('relatorio')">📑 Relatório</button>
+</div>
+
+<div id="calculadora" class="aba ativa">
+
+<h2>CALCULADORA PROVA DE TIRO</h2>
+
+<input type="number" id="silhueta5" placeholder="ALVO SILHUETA 5 MTS"><br>
+<input type="number" id="silhueta7" placeholder="ALVO SILHUETA 7 MTS"><br>
+<input type="number" id="colorido" placeholder="ALVO COLORIDO"><br>
+
+<input type="number" id="total" placeholder="TOTAL" readonly><br>
+
+<button onclick="calcular()">DISPARAR CÁLCULO</button>
+
+<div id="resultado"></div>
+
+</div>
+
+<div id="registro" class="aba">
+
+<h2>REGISTRO DE ALUNO</h2>
+
+<input type="text" id="turma" maxlength="1" placeholder="TURMA"><br>
+<input type="text" id="aluno" placeholder="NOME DO ALUNO"><br>
+
+<input type="number" id="r_s5" placeholder="SILHUETA 5 MTS"><br>
+<input type="number" id="r_s7" placeholder="SILHUETA 7 MTS"><br>
+<input type="number" id="r_colorido" placeholder="ALVO COLORIDO"><br>
+
+<button onclick="adicionarAluno()">Salvar Registro</button>
+
+<div id="msgRegistro"></div>
+
+</div>
+
+<div id="relatorio" class="aba">
+
+<h2>RELATÓRIO DE ALUNOS</h2>
+
+<select id="filtroTurma" onchange="filtrarRelatorio()">
+<option value="">Todas as Turmas</option>
+</select>
+
+<table id="tabelaRelatorio">
+
+<thead>
+<tr>
+<th>Turma</th>
+<th>Aluno</th>
+<th>5 mts</th>
+<th>7 mts</th>
+<th>Colorido</th>
+<th>Total</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<audio id="somDisparo" src="disparo.mp3"></audio>
+<audio id="somNegado" src="negado.mp3"></audio>
+
+<div class="credito">
+DESENVOLVIDO POR ANDERSON VIEIRA - TURMA JAGUAR - ALUNO J1 - LXII CFP PF
+</div>
+
+<script>
+
+let alunos=[]
+
+function mostrarAba(id){
+document.querySelectorAll(".aba").forEach(a=>a.classList.remove("ativa"))
+document.getElementById(id).classList.add("ativa")
+}
+
+turma.addEventListener("input",function(){
+this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase()
+})
+
+aluno.addEventListener("input",function(){
+this.value=this.value.replace(/[^A-Za-z0-9\s]/g,'').toUpperCase()
+})
+
+function flash(tipo){
+document.body.classList.remove("flashAprovado","flashReprovado","flashSegunda")
+void document.body.offsetWidth
+document.body.classList.add(tipo)
+}
+
+silhueta5.onkeydown=e=>{if(e.key==="Enter"){silhueta7.focus()}}
+silhueta7.onkeydown=e=>{if(e.key==="Enter"){colorido.focus()}}
+colorido.onkeydown=e=>{if(e.key==="Enter"){calcular()}}
+
+turma.onkeydown=e=>{if(e.key==="Enter"){aluno.focus()}}
+aluno.onkeydown=e=>{if(e.key==="Enter"){r_s5.focus()}}
+r_s5.onkeydown=e=>{if(e.key==="Enter"){r_s7.focus()}}
+r_s7.onkeydown=e=>{if(e.key==="Enter"){r_colorido.focus()}}
+r_colorido.onkeydown=e=>{if(e.key==="Enter"){adicionarAluno()}}
+
+function calcular(){
+
+let v1=parseFloat(silhueta5.value)
+let v2=parseFloat(silhueta7.value)
+let v3=parseFloat(colorido.value)
+
+let soma=v1+v2+v3
+total.value=soma
+
+let status
+
+/* REGRA NOVA */
+
+if(v1<20 || v2<20 || v3<48){
+status="REPROVADO"
+}
+else if(v1<30 || v2<30 || v3<72){
+status="APTO PARA A SEGUNDA PROVA"
+}
+else{
+status="APROVADO"
+}
+
+resultado.innerHTML=status
+
+if(status==="APROVADO"){
+resultado.className="aprovado"
+flash("flashAprovado")
+somDisparo.play()
+}
+else if(status==="APTO PARA A SEGUNDA PROVA"){
+resultado.className="segunda"
+flash("flashSegunda")
+somDisparo.play()
+}
+else{
+resultado.className="reprovado"
+flash("flashReprovado")
+somNegado.play()
+}
+
+}
+
+/* RESTANTE DO SISTEMA PERMANECE IGUAL */
+
+function adicionarAluno(){
+
+let t=turma.value
+let a=aluno.value
+
+let v1=parseFloat(r_s5.value)
+let v2=parseFloat(r_s7.value)
+let v3=parseFloat(r_colorido.value)
+
+let soma=v1+v2+v3
+
+let status
+
+if(v1<20 || v2<20 || v3<48){
+status="REPROVADO"
+}
+else if(v1<30 || v2<30 || v3<72){
+status="APTO PARA A SEGUNDA PROVA"
+}
+else{
+status="APROVADO"
+}
+
+alunos.push({turma:t,aluno:a,s5:v1,s7:v2,colorido:v3,total:soma,status})
+
+msgRegistro.innerHTML="REGISTRO SALVO"
+
+setTimeout(()=>{msgRegistro.innerHTML=""},2000)
+
+document.querySelectorAll("#registro input").forEach(i=>i.value="")
+
+turma.focus()
+
+atualizarRelatorio()
+
+}
+
+function atualizarRelatorio(){
+
+let tabela=document.querySelector("#tabelaRelatorio tbody")
+tabela.innerHTML=""
+
+let filtro=filtroTurma.value
+
+let turmas=[...new Set(alunos.map(a=>a.turma))]
+
+filtroTurma.innerHTML='<option value="">Todas as Turmas</option>'+turmas.map(t=>`<option value="${t}">${t}</option>`).join("")
+
+filtroTurma.value=filtro
+
+let lista=[...alunos]
+
+lista.sort((a,b)=>b.total-a.total)
+
+lista.forEach(a=>{
+
+if(filtro && a.turma!==filtro)return
+
+let linha=tabela.insertRow()
+
+linha.insertCell(0).innerText=a.turma
+linha.insertCell(1).innerText=a.aluno
+linha.insertCell(2).innerText=a.s5
+linha.insertCell(3).innerText=a.s7
+linha.insertCell(4).innerText=a.colorido
+linha.insertCell(5).innerText=a.total
+linha.insertCell(6).innerText=a.status
+
+if(a.status==="APROVADO") linha.cells[6].style.color="lime"
+else if(a.status==="APTO PARA A SEGUNDA PROVA") linha.cells[6].style.color="yellow"
+else linha.cells[6].style.color="red"
+
+})
+
+}
+
+function filtrarRelatorio(){
+atualizarRelatorio()
+}
+
+</script>
+
+</body>
+</html>
