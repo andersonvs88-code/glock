@@ -133,6 +133,31 @@ color:#cccccc;
 
 <body>
 
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAKFS0REvbz6yiNFlClGru7MYVAZVkuyww",
+    authDomain: "calcudaldora-prova-de-tiro.firebaseapp.com",
+    projectId: "calcudaldora-prova-de-tiro",
+    storageBucket: "calcudaldora-prova-de-tiro.firebasestorage.app",
+    messagingSenderId: "904395132858",
+    appId: "1:904395132858:web:8dcd59d418bba5374ed783",
+    measurementId: "G-GHCVZHH56Q"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
 <img src="glock17.png" class="background-img">
 
 <div class="menu">
@@ -210,6 +235,7 @@ DESENVOLVIDO POR ANDERSON VIEIRA - TURMA JAGUAR - ALUNO J1 - LXII CFP PF
 </div>
 
 <script>
+
 
 let alunos=[]
 
